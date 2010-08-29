@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/refresh"
+          android:icon="@drawable/ic_menu_refresh"
+          android:title="Refresh" />
+    <item android:id="@+id/previous"
+          android:icon="@drawable/ic_menu_back"
+          android:title="Previous" />
+    <item android:id="@+id/next"
+          android:icon="@drawable/ic_menu_forward"
+          android:title="Next" /><item android:id="@+id/categories"
+          android:icon="@drawable/ic_menu_archive"
+          android:title="Categories" /><item android:id="@+id/search"
+          android:icon="@drawable/ic_menu_search"
+          android:title="Search" />
+    <item android:id="@+id/logout"
+          android:icon="@drawable/ic_menu_close_clear_cancel"
+          android:title="Logout" />
+    
+   
+</menu>

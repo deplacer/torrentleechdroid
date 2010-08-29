@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"    android:layout_width="fill_parent"    android:layout_height="fill_parent">
+	<ImageView android:id="@+id/myImg" android:layout_width="wrap_content"  
+	    android:layout_height="wrap_content" />
+	<TextView 
+	  android:id="@+id/textview1"
+	    android:layout_width="wrap_content"  
+	    android:layout_height="wrap_content"  
+	    android:text="Username"/>
+	<EditText android:id="@+id/username" android:layout_width="200sp"  
+	    android:layout_height="wrap_content" />
+	<TextView 
+	  android:id="@+id/textview2"
+	    android:layout_width="wrap_content"  
+	    android:layout_height="wrap_content"  
+	    android:text="Password"/>
+	<EditText android:id="@+id/password" android:layout_width="200sp"  
+	    android:layout_height="wrap_content" />
+	<TextView 
+	  android:id="@+id/textview3"
+	    android:layout_width="wrap_content"  
+	    android:layout_height="wrap_content"  
+	    android:text="Captcha"/>
+	
+	
+	<LinearLayout android:orientation="horizontal" 
+		android:layout_width="fill_parent" android:layout_height="wrap_content" 
+		>
+		<EditText android:id="@+id/captchaResponse" android:layout_width="200sp"  
+	    android:layout_height="wrap_content" />
+	    <Button android:id="@+id/postButton" android:layout_width="wrap_content"   
+	    android:layout_height="wrap_content"  
+	    android:text="Login"/>
+	</LinearLayout>
+	
+	
+	
+	<Button android:id="@+id/refreshButton" android:layout_width="200sp"   
+	    android:layout_height="wrap_content"  
+	    android:text="Refresh Captcha"/>
+	<TextView 
+	  android:id="@+id/textview"
+	    android:layout_width="wrap_content"  
+	    android:layout_height="wrap_content"  
+	    android:text=""/>
+</LinearLayout>
