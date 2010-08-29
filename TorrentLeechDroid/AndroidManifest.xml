@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      android:versionName="Beta" android:versionCode="1" package="ben.TorrentLeechDroid">
+    <application android:label="@string/app_name" android:allowClearUserData="true" android:icon="@drawable/tld_logo" android:name="TorrentLeechDroidApp">
+        <activity android:name=".TorrentLeechDroid"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+		<activity android:name=".TorrentList" android:label="Torrent List"/>
+		<activity android:name=".Search" android:label="Torrent Search">
+      	</activity>
+		
+    </application>
+
+
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+
+</manifest> 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, TorrentLeechDroid!</string>
+    <string name="app_name">Torrent LeechD</string>
+	<string name="test">Ben</string>
+	<string name="cat_prompt">(All Types)</string>
+	<string name="search_title">TLDroid Search</string>
+	<string name="list_title">TLDroid List</string>
+	<string name="login_title">TLDroid Login</string>
+</resources>
