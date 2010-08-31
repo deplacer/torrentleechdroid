@@ -42,8 +42,8 @@ import android.os.Environment;
 
 
 public class TorrentLeechDroidApp extends Application {
-	public static final String PREFS_NAME = "MyPrefsFile";
-	public DefaultHttpClient Client = null;
+	public static final String PREFS_NAME = "TLDroidPrefsFile";
+	public DefaultHttpClient Client;
 	public String[] CategorieNames = null;
 	public String[] CategorieIds = null;
 	public static final String categoryPattern = "value=\"(\\d*)\">([^<]*)";
@@ -56,15 +56,20 @@ public class TorrentLeechDroidApp extends Application {
 		
 	}
 	
+	
+	
 	public int LoadCookies(DefaultHttpClient httpclient)
 	{
+		try
+		{
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		String cList = settings.getString("Cookie1", null);
 		if(cList != null && cList.length() > 0)
 		{
 			final CookieStore targetCookieStore = httpclient.getCookieStore();
 
-            List<Cookie> cookies = (List<Cookie>)stringToObject(cList);
+            @SuppressWarnings("unchecked")
+			List<Cookie> cookies = (List<Cookie>)stringToObject(cList);
 
             // Add all the extracted cookies to the cookie store.
             for (Cookie cookie : cookies) {
@@ -73,6 +78,12 @@ public class TorrentLeechDroidApp extends Application {
             Date d = new Date();
             targetCookieStore.clearExpired(d);
 			return cookies.size();
+		}
+		}
+		finally
+		{
+			
+		
 		}
 		return -1;
 		
@@ -143,6 +154,7 @@ public class TorrentLeechDroidApp extends Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		StoreCookies(Client);
         return getResponseBody(response);
 	}
 	
@@ -325,6 +337,8 @@ public class TorrentLeechDroidApp extends Application {
     	
     	public void LoadCategories(String pageHtml)
     	{
+    		try
+    		{
     		Pattern categoryStart = Pattern.compile("<select name=\"cat\">.*</select>", Pattern.DOTALL);
 
     		 Matcher catMatch = categoryStart.matcher(pageHtml);
@@ -345,5 +359,11 @@ public class TorrentLeechDroidApp extends Application {
     		}
     		CategorieNames = cNames.toArray(new String[cNames.size()]);
     		CategorieIds = cIds.toArray(new String[cIds.size()]);
+    		}
+    		catch(Exception e)
+    		{
+    			
+    		
+    		}
     	}
 }
