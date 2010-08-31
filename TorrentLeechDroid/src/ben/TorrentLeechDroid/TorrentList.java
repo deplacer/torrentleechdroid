@@ -42,11 +42,15 @@ public class TorrentList extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listlayout);
-		Bundle bundle = getIntent().getExtras();
-		BaseUrl = bundle.getString("PageUrl");
-		Search = bundle.getString("Search");
-		CurrentCategory = bundle.getInt("Category");
-		LoadList(getCurrentUrl());
+		try
+		{
+			Bundle bundle = getIntent().getExtras();
+			BaseUrl = bundle.getString("PageUrl");
+			Search = bundle.getString("Search");
+			CurrentCategory = bundle.getInt("Category");
+			LoadList(getCurrentUrl());
+		}
+		finally {}
 	}
 	public void LoadList(final String Url)
 	{
@@ -63,6 +67,7 @@ public class TorrentList extends ListActivity {
 		if(pageHtml == null || pageHtml.length() == 0)
 		{
 			LogoutClear();
+			return;
 		}
 		if(getApp().CategorieIds == null)
 			getApp().LoadCategories(pageHtml);
