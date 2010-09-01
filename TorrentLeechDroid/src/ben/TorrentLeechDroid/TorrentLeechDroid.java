@@ -15,11 +15,14 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.Window;
 import android.widget.*;
 
 public class TorrentLeechDroid extends Activity {
@@ -45,12 +48,23 @@ public class TorrentLeechDroid extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.layout2);
+     
         
         int validCookies = getApp().LoadCookies(getApp().Client); 
         //MessageBox(""+validCookies);
         if(validCookies <= 0)
         {
-        	setContentView(R.layout.layout2);
+        	
+        	
+        	
+        	EditText username = (EditText)findViewById(R.id.username);
+        	username.setOnClickListener(mUserNameListener);
+        	
+        	EditText password = (EditText)findViewById(R.id.password);
+        	password.setOnFocusChangeListener(mPasswordListener);
+        	
 	        Button PostButton = (Button)findViewById(R.id.postButton);
 	        PostButton.setOnClickListener(mPostListener);
 	        Button refreshButton = (Button)findViewById(R.id.refreshButton);
@@ -76,7 +90,7 @@ public class TorrentLeechDroid extends Activity {
     }
     public void ReloadLogin()
     {
-    	setTitle(R.string.login_title);
+    	((TextView)findViewById(R.id.titleRightTop)).setText("Login");
     	
     	dialog  = ProgressDialog.show(TorrentLeechDroid.this, "", 
 				"Loading . . Please wait.", true);
@@ -92,12 +106,34 @@ public class TorrentLeechDroid extends Activity {
     	ImageView iv = (ImageView)findViewById(R.id.myImg);
     	iv.setImageDrawable(ImageOperations(this, cCaptcha.ImageUrl, "tempCaptcha.jpg"));
     }
-    
+    private OnClickListener mUserNameListener = new OnClickListener() {
+    	@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+    		EditText username = (EditText)findViewById(R.id.username);
+		    username.setText("");
+		    username.setTextColor(Color.BLACK);
+    		
+		}
+    };
+    private OnFocusChangeListener mPasswordListener = new OnFocusChangeListener() {
+    	@Override
+		public void onFocusChange(View arg0, boolean arg1) {
+			// TODO Auto-generated method stub
+    		if(arg1)
+    		{
+    			EditText password = (EditText)findViewById(R.id.password);
+		    		password.setText("");
+		    		password.setTextColor(Color.BLACK);
+    		}
+		}
+    };
     
     private OnClickListener mPostListener = new OnClickListener() {
     	public void onClick(View v) {
     		// do something when the button is clicked   
-    		
+    		EditText username = (EditText)findViewById(R.id.username);
+    		getApp().Username = username.getText().toString();
     		dialog  = ProgressDialog.show(TorrentLeechDroid.this, "", 
     				"Loading . . Please wait.", true);
     		//MessageBox(Url);
@@ -163,7 +199,7 @@ public class TorrentLeechDroid extends Activity {
    	    	dialog.hide();
    	    	 if(result != null && result.length() > 0)
   	        {
-  	        	LoadList();
+   	    		LoadList();
   	        }
    	    	else
    	    	{

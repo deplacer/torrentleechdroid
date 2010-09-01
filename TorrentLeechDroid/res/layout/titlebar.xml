@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:background="#181818"
+  android:padding="4sp"
+  android:orientation="horizontal">
+  <LinearLayout android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+  	<TextView android:layout_width="wrap_content" android:textSize="10sp"
+                android:layout_height="wrap_content" android:id="@+id/titleLeftTop"
+                android:text="Username - Ratio"></TextView>
+   
+    <LinearLayout
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:orientation="horizontal">
+    	<TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/titleDownLabel"
+                android:text="D:" android:textColor="#00FF00" android:textSize="10sp"></TextView>
+    	<TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/titleDown"
+                android:text=" " android:textSize="10sp"></TextView>
+        <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/titleUpLabel"
+                android:text="  U:" android:textColor="#FF0000" android:textSize="10sp"></TextView>
+    	<TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/titleUp"
+                android:text=" " android:textSize="10sp"></TextView>
+    </LinearLayout>
+  </LinearLayout>
+  <LinearLayout android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="vertical">
+        <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/titleRightTop"
+                android:text="" android:textSize="10sp"></TextView>
+        <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/titleRightBottom"
+                android:text="" android:textSize="10sp"></TextView>
+  </LinearLayout>
+  
+
+</RelativeLayout>

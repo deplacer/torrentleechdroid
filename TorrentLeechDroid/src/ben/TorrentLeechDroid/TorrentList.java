@@ -23,13 +23,15 @@ import android.widget.*;
 
 public class TorrentList extends ListActivity {
 
+	public static final String imgPath = "http://www.torrentleech.org/pic/";
+	public static final String infoPath = "http://www.torrentleech.org/details.php?id=";
 	private int CurrentPage = 0;
 	private int LastPage = 0;
 	private int CurrentCategory = 0;
 	private String BaseUrl = "";
 	private String Search = "";
 	private TLTorrentItemAdapater adapter;
-	private ProgressDialog dialog;
+	private ProgressDialog MyDialog;
 	
 	public TorrentLeechDroidApp app = null;
 	public TorrentLeechDroidApp getApp()
@@ -41,13 +43,17 @@ public class TorrentList extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.listlayout);
-		try
+		
+        try
 		{
 			Bundle bundle = getIntent().getExtras();
 			BaseUrl = bundle.getString("PageUrl");
 			Search = bundle.getString("Search");
 			CurrentCategory = bundle.getInt("Category");
+			String Url = getCurrentUrl();
+			//MessageBox(Url);
 			LoadList(getCurrentUrl());
 		}
 		finally {}
@@ -55,7 +61,7 @@ public class TorrentList extends ListActivity {
 	public void LoadList(final String Url)
 	{
 		//String pageHtml = "";
-		dialog  = ProgressDialog.show(TorrentList.this, "", 
+		MyDialog  = ProgressDialog.show(TorrentList.this, "", 
 				"Loading . . Please wait.", true);
 		//MessageBox(Url);
 		new DownloadHtml().execute(Url);
@@ -76,12 +82,19 @@ public class TorrentList extends ListActivity {
 		
 		this.CurrentCategory = TLTorrentItemManager.getCategory(pageHtml);
 		this.LastPage = TLTorrentItemManager.geLastPage(pageHtml);
-		setTitle(R.string.list_title);
-		setTitle(getTitle()+" "+getCategoryText()+" "+(CurrentPage+1)+" of "+(LastPage+1));
+		//setTitle(R.string.list_title);
+		//setTitle(getTitle()+" "+getCategoryText()+" "+(CurrentPage+1)+" of "+(LastPage+1));
+		getApp().CheckAndLoadHeader(pageHtml);
+   		((TextView)findViewById(R.id.titleLeftTop)).setText(getApp().Username+" - "+getApp().Ratio);
+   		((TextView)findViewById(R.id.titleDown)).setText(getApp().Downloaded);
+   		((TextView)findViewById(R.id.titleUp)).setText(getApp().Uploaded);
+		((TextView)findViewById(R.id.titleRightTop)).setText(getCategoryText());
+		((TextView)findViewById(R.id.titleRightBottom)).setText((CurrentPage+1)+" of "+(LastPage+1));
 		
 		this.adapter = new TLTorrentItemAdapater(this, R.layout.listitemlayout, TLTorrentItemManager.getTLTorrentItems(pageHtml)); 
 		setListAdapter(this.adapter);
-        dialog.hide();
+        MyDialog.hide();
+        
 	}
 	
 	private void LogoutClear()
@@ -97,26 +110,66 @@ public class TorrentList extends ListActivity {
 	    return true;
 	}
 	
+	private TLTorrentItem CurrentItem = null;
+	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
-
-
-		TLTorrentItem tlTI = this.adapter.getItem(position);
-		String uriString = "http://www.torrentleech.org/"+tlTI.DownloadUrl;
+		CurrentItem = this.adapter.getItem(position);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	//builder.setTitle("Categories");
+    	builder.setItems(new String[] { "Download Now", "View Info" } , new DialogInterface.OnClickListener() {
+    	    public void onClick(DialogInterface dialog, int item) {
+    	       // Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
+    	    	if(item == 0)
+    	    	{
+    	    		
+    	    		String uriString = "http://www.torrentleech.org/"+CurrentItem.DownloadUrl;
+    	    		
+    	    		MyDialog  = ProgressDialog.show(TorrentList.this, "", 
+    	    				"Downloading Torrent. . Please wait.", true);
+    	    		//MessageBox(Url);
+    	    		new DownloadFile().execute(uriString);
+    	    	}
+    	    	else if(item == 1)
+    	    	{
+    	    		MyDialog  = ProgressDialog.show(TorrentList.this, "", 
+    	    				"Downloading Info. . Please wait.", true);
+    	    		//MessageBox(Url);
+    	    		new DownloadInfo().execute(infoPath+CurrentItem.ID);
+    	    	}
+    	    }
+    	});
+    	AlertDialog alert = builder.create();
+    	alert.show();
 		
-		dialog  = ProgressDialog.show(TorrentList.this, "", 
-				"Downloading Torrent. . Please wait.", true);
-		//MessageBox(Url);
-		new DownloadFile().execute(uriString);
+		
+
 		
 		
 		super.onListItemClick(l, v, position, id);
 	}
 	
+	public void LaunchInfo(String pageHtml)
+	{
+		MyDialog.hide();
+		//MessageBox(pageHtml);
+		try
+		{
+			Intent myIntent = new Intent(TorrentList.this, InfoView.class);
+			String justInfo = TLTorrentItemManager.getInfo(pageHtml);
+			myIntent.putExtra("HtmlData", justInfo);
+	        startActivity(myIntent);
+		}
+		catch(Exception e)
+		{
+		
+		}
+	}
+	
 	private void OpenTempTorrent(String downloadResult)
 	{
-		dialog.hide();
+		MyDialog.hide();
 		try
 		{
 			if(downloadResult == "Download Complete")
@@ -159,8 +212,13 @@ public class TorrentList extends ListActivity {
 	 
 	                TLTorrentItem it = items[position]; 
 	                if (it != null) { 
-	                	TextView tv1 = (TextView) v.findViewById(R.id.text1); 
-	                        if (tv1 != null) { 
+	                	TextView tv1 = (TextView) v.findViewById(R.id.text1);
+	                	ImageView catImageView = (ImageView) v.findViewById(R.id.imgCategory);
+	                	//TextView tImgAlt = (TextView) v.findViewById(R.id.imgAlt);
+	                    //tImgAlt.setText(it.ImgName);
+	                	catImageView.setImageDrawable( getApp().ImageGet(this.getContext(), imgPath+it.ImgName, it.ImgName) );
+	                	
+	                	if (tv1 != null) { 
 	                        	tv1.setText(it.Name);
 	                        }
                         TextView tv2 = (TextView) v.findViewById(R.id.text2); 
@@ -297,6 +355,30 @@ public class TorrentList extends ListActivity {
 
 	     protected void onPostExecute(String result) {
 	    	 OpenTempTorrent(result);
+	     }
+	 }
+	private class DownloadInfo extends AsyncTask<String, Integer, String> {
+	     protected String doInBackground(String... url) {
+	    	 String pageHtml = "";
+	    	 try
+	    	 {
+	    		 TorrentLeechDroidApp app = (TorrentLeechDroidApp)getApplication();
+	    		 pageHtml = app.GetUrlHtml(url[0]);
+	    	 }
+	    	 catch(Exception e)
+	    	 {
+	    		 return e.getMessage();
+	    	 }
+	         return pageHtml;
+	     }
+
+	     protected void onProgressUpdate(Integer... progress) {
+	         //setProgressPercent(progress[0]);
+	     }
+
+	     protected void onPostExecute(String result) {
+	    	 MyDialog.hide();
+	         LaunchInfo(result);
 	     }
 	 }
 }
