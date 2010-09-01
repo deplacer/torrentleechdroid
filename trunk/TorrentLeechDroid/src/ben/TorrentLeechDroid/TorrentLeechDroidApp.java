@@ -13,6 +13,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,10 +37,13 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.ParseException;
 import android.os.Environment;
 //import android.util.Base64InputStream;
 //import android.util.Base64OutputStream;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class TorrentLeechDroidApp extends Application {
@@ -46,6 +51,11 @@ public class TorrentLeechDroidApp extends Application {
 	public DefaultHttpClient Client;
 	public String[] CategorieNames = null;
 	public String[] CategorieIds = null;
+	public String Username;
+	public String Ratio;
+	public String Downloaded;
+	public String Uploaded;
+	
 	public static final String categoryPattern = "value=\"(\\d*)\">([^<]*)";
 	public TorrentLeechDroidApp ()
 	{
@@ -366,4 +376,48 @@ public class TorrentLeechDroidApp extends Application {
     		
     		}
     	}
+    	
+    	
+		public Drawable ImageGet(Context ctx, String url, String saveFilename) {
+    		try {
+    			File imgFile = new File(getFilesDir(), saveFilename );
+    			if(!imgFile.exists())
+    			{
+    				InputStream is = (InputStream) this.fetch(url);
+    				FileOutputStream fos = new FileOutputStream(imgFile);
+    				copy(is, fos);
+    				fos.flush();
+    				fos.close();
+    			}
+    			Drawable d = Drawable.createFromPath(getFilesDir()+"/"+saveFilename);
+    			return d;
+    		} catch (MalformedURLException e) {
+    			e.printStackTrace();
+    			return null;
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    			return null;
+    		}
+    	}
+    	
+    	public Object fetch(String address) throws MalformedURLException,IOException {
+    		URL url = new URL(address);
+    		Object content = url.getContent();
+    		return content;
+    	}
+    	
+    	public void CheckAndLoadHeader(String html)
+    	{
+    		if(Username == null || Username.length() == 0)
+    			Username = TLTorrentItemManager.getUsername(html);
+    		if(Ratio == null || Ratio.length() == 0)
+    			Ratio = TLTorrentItemManager.getRatio(html);
+    		if(Downloaded == null || Downloaded.length() == 0)
+    			Downloaded = TLTorrentItemManager.getDownloaded(html);
+    		if(Uploaded == null || Uploaded.length() == 0)
+    			Uploaded = TLTorrentItemManager.getUploaded(html);
+    	
+    	}
+    	
+    
 }

@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:orientation="vertical"    android:layout_width="fill_parent"    android:layout_height="fill_parent">
-	
-	<TextView 
-	  android:id="@+id/textview"
-	    android:layout_width="wrap_content"  
-	    android:layout_height="wrap_content"  
-	    android:text="Search"/>
-	<EditText android:id="@+id/searchCriteria" android:layout_width="250sp"  
+	<include android:id="@+id/topTitle" layout="@layout/titlebar" /> 
+	<EditText android:id="@+id/searchCriteria" android:layout_width="fill_parent"  
 	    android:layout_height="wrap_content" />
-	    
-	<TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:text="Category"
-    />
-
-    <Spinner 
+	<Spinner 
         android:id="@+id/spinner"
-        android:layout_width="250sp"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
+        android:layout_width="fill_parent"
+        android:layout_height="48sp"
+        android:drawSelectorOnTop="false"
         android:prompt="@string/cat_prompt"
     />
     <Button android:id="@+id/searchButton" android:layout_width="wrap_content"  
-	    android:layout_height="wrap_content"  
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="right" 
 	    android:text="Search"/>
+	<ImageView 
+	  android:id="@+id/textview"
+	    android:layout_width="wrap_content"  
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:src="@drawable/tl2"
+	    android:scaleType="fitEnd" />
 </LinearLayout>

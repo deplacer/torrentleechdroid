@@ -6,11 +6,14 @@ import java.util.regex.*;
 
 public class TLTorrentItemManager {
 
-	public static final String tlItem = "\"details\\.php\\?id=([^\"|&]*).*<b>([^<]*).*<font[^>]*>([^<]*).*\\n((?!href=\").)*href=\"([^\"]*).*\\n.*\\n.*\\n[^>]*>([^<]*)<br>([^<]*).*\\n[^>]*>([^<]*)<br>([^<]*).*\\n((?!>[0-9]+<).)*>([^<]*).*\\n((?!>[0-9]+<).)*>([^<]*).*\\n((?!>[a-zA-z0-9]+<).)*>([^<]*).*\\n";
+	//public static final String tlItem = "\"details\\.php\\?id=([^\"|&]*).*<b>([^<]*).*<font[^>]*>([^<]*).*\\n((?!href=\").)*href=\"([^\"]*).*\\n.*\\n.*\\n[^>]*>([^<]*)<br>([^<]*).*\\n[^>]*>([^<]*)<br>([^<]*).*\\n((?!>[0-9]+<).)*>([^<]*).*\\n((?!>[0-9]+<).)*>([^<]*).*\\n((?!>[a-zA-z0-9]+<).)*>([^<]*).*\\n";
+	public static final String tlItem = "src=\".*pic/(.*)\".* alt=\".*\".*\\n.*\"details\\.php\\?id=([^\\\"|&]*).*<b>([^<]*).*<font[^>]*>([^<]*).*\\n((?!href=\\\").)*href=\\\"([^\\\"]*).*\\n.*\\n.*\\n[^>]*>([^<]*)<br>([^<]*).*\\n[^>]*>([^<]*)<br>([^<]*).*\\n((?!>[0-9]+<).)*>([^<]*).*\\n((?!>[0-9]+<).)*>([^<]*).*\\n((?!>[a-zA-z0-9]+<).)*>([^<]*).*\\n";
 	public static final String catPattern = "name=c(\\d*) type=\"checkbox\" checked ";
 	public static final String lastPagePattern = "page=(\\d*)\"><b>\\d*&nbsp;-&nbsp;\\d*</b></a></p>";
-	
-	
+	public static final String usernamePattern = "userdetails.php[^>]*>([^<]*)</a>";
+	public static final String ratioPattern = "Ratio:.*>(\\d*.\\d*)</";
+	public static final String downloadedPattern = "Downloaded:.*>(\\d*.\\d* [A-Z]{2})</";
+	public static final String uploadedPattern = "Uploaded:</[^<]*<[^>]*>(\\d*.\\d* [A-Z]{2})";
 	
 	public static TLTorrentItem[] getTLTorrentItems(String pageHtml)
 	{
@@ -23,14 +26,15 @@ public class TLTorrentItemManager {
 				new TLTorrentItem(
 					mTLItem.group(1),
 					mTLItem.group(2),
-					mTLItem.group(5),
-					"details.php?id="+mTLItem.group(1)+"&amp;hit=1",
-					mTLItem.group(6)+" "+mTLItem.group(7),
-					mTLItem.group(8),
-					mTLItem.group(11),
-					mTLItem.group(13),
-					mTLItem.group(15),
-					mTLItem.group(3));
+					mTLItem.group(3),
+					mTLItem.group(6),
+					"details.php?id="+mTLItem.group(2)+"&amp;hit=1",
+					mTLItem.group(7)+" "+mTLItem.group(8),
+					mTLItem.group(9),
+					mTLItem.group(12),
+					mTLItem.group(14),
+					mTLItem.group(16),
+					mTLItem.group(4));
 			myItems.add(tlTI);
 			index = mTLItem.end();
 		}
@@ -73,6 +77,66 @@ public class TLTorrentItemManager {
 				lastPage++;
 		}
 		return lastPage;
+	}
+	public static String getUsername(String pageHtml)
+	{
+		String result = "";
+		Pattern Pat = Pattern.compile(usernamePattern);
+		Matcher mat = Pat.matcher(pageHtml);
+		if(mat.find())
+		{
+			result = mat.group(1);
+		}
+		return result;
+	}
+	public static String getRatio(String pageHtml)
+	{
+		String result = "";
+		Pattern Pat = Pattern.compile(ratioPattern);
+		Matcher mat = Pat.matcher(pageHtml);
+		if(mat.find())
+		{
+			result = mat.group(1);
+		}
+		return result;
+	}
+	public static String getDownloaded(String pageHtml)
+	{
+		String result = "";
+		Pattern Pat = Pattern.compile(downloadedPattern);
+		Matcher mat = Pat.matcher(pageHtml);
+		if(mat.find())
+		{
+			result = mat.group(1);
+		}
+		return result;
+	}
+	public static String getUploaded(String pageHtml)
+	{
+		String result = "";
+		Pattern Pat = Pattern.compile(uploadedPattern);
+		Matcher mat = Pat.matcher(pageHtml);
+		if(mat.find())
+		{
+			result = mat.group(1);
+		}
+		return result;
+	}
+	
+	public static String getInfo(String pageHtml)
+	{
+		String info = "";
+		int start = pageHtml.indexOf("<tt>");
+		int end = pageHtml.indexOf("</tt>")+5;
+		try
+		{
+			info = pageHtml.substring(start, end);
+		}
+		catch(Exception e)
+		{
+			info = "Not Found";
+		}
+		return info;
 	}
 	
 	

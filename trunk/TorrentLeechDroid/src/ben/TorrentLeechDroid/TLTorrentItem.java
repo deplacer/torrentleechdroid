@@ -12,10 +12,12 @@ public class TLTorrentItem {
 	public String Leechers;
 	public String User;
 	public String Date;
+	public String ImgName;
 	
-	public TLTorrentItem(String id, String name, String downloadUrl, String url, String size, String downloadTimes,
+	public TLTorrentItem(String imgName, String id, String name, String downloadUrl, String url, String size, String downloadTimes,
 			String seeders, String leechers, String user, String date)
 	{
+		ImgName = imgName;
 		ID = id;
 		Name = name;
 		DownloadUrl = downloadUrl;
